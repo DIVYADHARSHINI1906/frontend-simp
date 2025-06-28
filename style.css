@@ -1,0 +1,482 @@
+:root {
+    --color-dark-bg: #0d1117; /* Very dark background */
+    --color-light-bg: #1a202c; /* Slightly lighter dark background */
+    --color-primary-accent: #8e2de2; /* Purple */
+    --color-secondary-accent: #4a00e0; /* Violet */
+    --color-text-light: #e2e8f0; /* Light gray text */
+    --color-text-dim: #a0aec0; /* Dimmer text */
+    --border-radius-lg: 1.5rem; /* Large rounded corners */
+    --transition-speed: 0.6s; /* General transition speed */
+    --animation-duration: 1.2s; /* Duration for scroll-triggered animations */
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--color-dark-bg);
+    color: var(--color-text-light);
+    line-height: 1.6;
+    overflow-x: hidden; /* Prevent horizontal scroll from 3D transforms */
+}
+
+/*
+ * UTILITY CLASSES
+ */
+.section-padding {
+    padding: 8rem 1rem; /* Generous padding for sections */
+}
+
+.container {
+    max-width: 1200px; /* Max width for content */
+    margin: 0 auto;
+    padding: 0 1.5rem;
+}
+
+.btn {
+    /* Tailwind apply for base button styles */
+    display: inline-block;
+    padding-left: 2rem; /* px-8 */
+    padding-right: 2rem; /* px-8 */
+    padding-top: 0.75rem; /* py-3 */
+    padding-bottom: 0.75rem; /* py-3 */
+    font-weight: 700; /* font-bold */
+    border-radius: 9999px; /* rounded-full */
+    transition-property: all; /* transition */
+    transition-duration: 300ms; /* duration-300 */
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); /* ease-in-out */
+    transform: scale(1); /* Initial transform */
+
+    background: linear-gradient(90deg, var(--color-primary-accent), var(--color-secondary-accent));
+    color: white;
+    box-shadow: 0 10px 20px rgba(74, 0, 224, 0.3); /* Subtle shadow for buttons */
+}
+
+.btn:hover {
+    transform: scale(1.05); /* hover:scale-105 */
+    box-shadow: 0 15px 30px rgba(74, 0, 224, 0.5);
+}
+
+.btn:active {
+    transform: scale(0.95); /* active:scale-95 */
+}
+
+
+/*
+ * SCROLL-TRIGGERED ANIMATIONS
+ * These classes will be added by JavaScript when elements enter the viewport.
+ * The animations are purely CSS.
+ */
+.hidden-item {
+    opacity: 0;
+    transform: translateY(50px) scale(0.9);
+    transition: opacity var(--animation-duration) ease-out, transform var(--animation-duration) ease-out;
+    will-change: opacity, transform; /* Optimize browser rendering */
+}
+
+.hidden-item.is-visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+/* Specific animation types for different elements */
+.fade-in-up {
+    transition-delay: 0.2s;
+}
+.fade-in-right {
+    transform: translateX(-50px) scale(0.9);
+    transition-delay: 0.4s;
+}
+.fade-in-right.is-visible {
+    transform: translateX(0) scale(1);
+}
+.fade-in-left {
+    transform: translateX(50px) scale(0.9);
+    transition-delay: 0.6s;
+}
+.fade-in-left.is-visible {
+    transform: translateX(0) scale(1);
+}
+
+/*
+ * HERO SECTION - 3D Perspective & Animated Elements
+ */
+#hero {
+    background-image:url('images\th.jpg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    color: #fff;
+    position: relative;
+    height: 100vh; /* Full viewport height */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    overflow: hidden;
+    background: radial-gradient(circle at top left, var(--color-light-bg), var(--color-dark-bg) 70%);
+    /* Set up 3D perspective for child elements */
+    perspective: 1000px; /* Defines the depth of the 3D scene */
+}
+
+.hero-content {
+    z-index: 2;
+    position: relative;
+    transform-style: preserve-3d; /* Allows child elements to be transformed in 3D */
+}
+
+.hero-title {
+    font-size: clamp(3rem, 8vw, 6rem); /* Fluid font size */
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+    background: linear-gradient(45deg, var(--color-primary-accent), var(--color-secondary-accent));
+    -webkit-background-clip: text; /* Clip background to text */
+    -webkit-text-fill-color: transparent; /* Make text transparent to show background */
+    text-shadow: 0 0 20px rgba(142, 45, 226, 0.3); /* Glowing effect */
+}
+
+.hero-subtitle {
+    font-size: clamp(1rem, 3vw, 1.8rem);
+    color: var(--color-text-dim);
+    margin-bottom: 2.5rem;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    transform: translateZ(20px); /* Pushes subtitle slightly forward in 3D space */
+}
+
+.hero-btn-wrapper {
+    transform: translateZ(50px); /* Pushes button further forward */
+}
+
+/* Background animated shapes for Hero section */
+.hero-shape {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.1;
+    filter: blur(80px);
+    animation: floatShape 15s infinite ease-in-out alternate;
+    z-index: 1;
+    will-change: transform;
+}
+
+.hero-shape:nth-child(1) {
+    width: 300px;
+    height: 300px;
+    background-color: var(--color-primary-accent);
+    top: 10%;
+    left: 15%;
+    animation-delay: 0s;
+}
+
+.hero-shape:nth-child(2) {
+    width: 400px;
+    height: 400px;
+    background-color: var(--color-secondary-accent);
+    bottom: 5%;
+    right: 10%;
+    animation-delay: 2s;
+}
+
+@keyframes floatShape {
+    0% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(30px, 20px) scale(1.05); }
+    100% { transform: translate(0, 0) scale(1); }
+}
+
+/*
+ * ABOUT SECTION - Custom Layout & 3D Card Flip
+ */
+#about {
+    background-color: var(--color-light-bg);
+    /* Complex background using multiple gradients and mix-blend-mode */
+    background-image:
+        linear-gradient(rgba(142, 45, 226, 0.05), transparent),
+        radial-gradient(circle at 10% 90%, rgba(74, 0, 224, 0.08), transparent 50%),
+        radial-gradient(circle at 90% 10%, rgba(142, 45, 226, 0.08), transparent 50%);
+}
+
+.about-grid {
+    display: grid;
+    grid-template-columns: 1fr; /* Single column on mobile */
+    gap: 4rem;
+    align-items: center;
+}
+
+@media (min-width: 768px) {
+    .about-grid {
+        grid-template-columns: 1fr 1fr; /* Two columns on desktop */
+    }
+}
+
+.about-text h2 {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 700;
+    margin-bottom: 2rem;
+    color: var(--color-text-light);
+}
+
+.about-text p {
+    color: var(--color-text-dim);
+    margin-bottom: 1rem;
+}
+
+.about-image-wrapper {
+    position: relative;
+    perspective: 1000px; /* Establish 3D context for the card */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 400px; /* Fixed height for consistent card sizing */
+}
+
+.about-card {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    max-width: 450px;
+    transform-style: preserve-3d; /* Key for 3D flip */
+    transition: transform 1s ease-out; /* Smooth flip transition */
+    border-radius: var(--border-radius-lg);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+    background-color: var(--color-dark-bg);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background-image: linear-gradient(rgba(255,255,255,0.02), transparent);
+}
+
+/* Initial 3D rotation for the card (hidden state) */
+.about-card.hidden-item {
+    transform: rotateY(-90deg) scale(0.8);
+    opacity: 0;
+    transition-delay: 0.6s; /* Delay its animation */
+}
+.about-card.is-visible {
+    transform: rotateY(0deg) scale(1);
+    opacity: 1;
+}
+
+.about-card img {
+    width: 90%;
+    height: 90%;
+    object-fit: cover;
+    border-radius: 1rem;
+    transform: translateZ(20px); /* Push image slightly forward in 3D */
+}
+
+/*
+ * SERVICES SECTION - Grid Layout with 3D Hover Effects
+ */
+#services {
+    background-color: var(--color-dark-bg);
+}
+
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Responsive grid */
+    gap: 2.5rem;
+}
+
+.service-card {
+    background-color: var(--color-light-bg);
+    border-radius: var(--border-radius-lg);
+    padding: 2.5rem;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    /* 3D transform on hover */
+    transform-style: preserve-3d;
+    transition: transform 0.4s ease-out, box-shadow 0.4s ease-out;
+    will-change: transform, box-shadow;
+
+    /* Add perspective to each card for independent 3D effect */
+    perspective: 800px;
+}
+
+.service-card:hover {
+    transform: rotateX(5deg) rotateY(-5deg) translateZ(20px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(74, 0, 224, 0.4);
+}
+
+.service-card .icon {
+    font-size: 3rem;
+    color: var(--color-primary-accent);
+    margin-bottom: 1.5rem;
+    transform: translateZ(30px); /* Push icon forward in 3D */
+    transition: transform 0.4s ease-out;
+}
+
+.service-card:hover .icon {
+    transform: translateZ(40px) scale(1.1); /* Animate icon on hover */
+}
+
+.service-card h3 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--color-text-light);
+    transform: translateZ(20px);
+}
+
+.service-card p {
+    color: var(--color-text-dim);
+    transform: translateZ(10px);
+}
+
+/*
+ * PORTFOLIO SECTION - Image Grid with `clip-path` & Hover Effects
+ */
+#portfolio {
+    background-color: var(--color-light-bg);
+    background-image:
+        linear-gradient(rgba(74, 0, 224, 0.05), transparent),
+        radial-gradient(circle at 90% 90%, rgba(142, 45, 226, 0.08), transparent 50%),
+        radial-gradient(circle at 10% 10%, rgba(74, 0, 224, 0.08), transparent 50%);
+}
+
+.portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2.5rem;
+}
+
+.portfolio-item {
+    position: relative;
+    border-radius: var(--border-radius-lg);
+    overflow: hidden; /* Crucial for clip-path */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    background-color: var(--color-dark-bg);
+    cursor: pointer;
+    transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
+    will-change: transform, box-shadow;
+}
+
+.portfolio-item:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(142, 45, 226, 0.4);
+}
+
+.portfolio-item img {
+    width: 100%;
+    height: 250px; /* Fixed height for images */
+    object-fit: cover;
+    /* `clip-path` for a custom shape */
+    clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
+    transition: clip-path 0.4s ease-out, transform 0.4s ease-out;
+    will-change: clip-path, transform;
+}
+
+.portfolio-item:hover img {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); /* Straighten shape on hover */
+    transform: scale(1.05); /* Zoom image slightly */
+}
+
+.portfolio-info {
+    padding: 1.5rem;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: linear-gradient(to top, var(--color-dark-bg) 60%, transparent); /* Fade out */
+    color: var(--color-text-light);
+    text-align: left;
+    transform: translateY(50%); /* Hide initially */
+    opacity: 0;
+    transition: transform 0.4s ease-out, opacity 0.4s ease-out;
+    will-change: transform, opacity;
+}
+
+.portfolio-item:hover .portfolio-info {
+    transform: translateY(0); /* Reveal on hover */
+    opacity: 1;
+}
+
+.portfolio-info h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.portfolio-info p {
+    color: var(--color-text-dim);
+    font-size: 0.9rem;
+}
+
+/*
+ * CONTACT SECTION - Form Styling & Subtle Animations
+ */
+#contact {
+    background-color: var(--color-dark-bg);
+}
+
+.contact-form {
+    background-color: var(--color-light-bg);
+    border-radius: var(--border-radius-lg);
+    padding: 3rem;
+    max-width: 600px;
+    margin: 0 auto;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transform-style: preserve-3d; /* For potential 3D field effects */
+}
+
+.contact-form label {
+    display: block;
+    margin-bottom: 0.75rem;
+    font-weight: 700;
+    color: var(--color-text-light);
+    transform: translateZ(10px); /* Push label forward */
+}
+
+.contact-form input[type="text"],
+.contact-form input[type="email"],
+.contact-form textarea {
+    width: 100%;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.75rem;
+    color: var(--color-text-light);
+    font-size: 1rem;
+    transition: border-color 0.3s ease-out, box-shadow 0.3s ease-out;
+    will-change: border-color, box-shadow;
+    transform: translateZ(5px); /* Push input forward */
+}
+
+.contact-form input[type="text"]:focus,
+.contact-form input[type="email"]:focus,
+.contact-form textarea:focus {
+    outline: none;
+    border-color: var(--color-primary-accent);
+    box-shadow: 0 0 0 3px rgba(142, 45, 226, 0.3);
+}
+
+.contact-form textarea {
+    min-height: 150px;
+    resize: vertical;
+}
+
+.contact-form .btn {
+    width: 100%;
+}
+
+/*
+ * FOOTER
+ */
+footer {
+    background-color: var(--color-light-bg);
+    text-align: center;
+    padding: 2.5rem 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    color: var(--color-text-dim);
+    font-size: 0.9rem;
+}
+
+/* Ensure smooth scrolling behavior */
+html {
+    scroll-behavior: smooth;
+}
